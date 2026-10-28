@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import {
   Alert,
   Image,
@@ -60,7 +61,7 @@ export default function HomeScreen() {
         >
           <Pressable
             style={[styles.actionButton, styles.createButton]}
-            onPress={() => comingSoon('Create Game')}
+            onPress={() => router.push('/create-game')}
           >
             <View style={styles.plusCircle}>
               <Text style={styles.plusText}>+</Text>
