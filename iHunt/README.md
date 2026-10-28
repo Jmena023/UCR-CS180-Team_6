@@ -1,56 +1,51 @@
-# Welcome to your Expo app 👋
+﻿# iHunt
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+An Expo SDK 58 / React Native / TypeScript frontend with an original jungle arcade design. Open the app straight into the playable demo; no credentials are required.
 
-## Get started
+## Run on your phone
 
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
+```sh
+cd iHunt
+npm install
+npm start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Scan the terminal QR code with Expo Go (iPhone: Camera app; Android: Expo Go scanner). The phone and computer should share Wi-Fi. For a connection across networks:
 
-### Other setup steps
+```sh
+npm run start:tunnel
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+Keep the terminal/server running. Each server session can generate a different URL, so old QR images may expire. Use an Expo Go version that supports SDK 58 (including Expo Go 58.0.5 on iPhone). Node 22.13+ is required; a project-local Node 22 runtime is included in dev dependencies for this workspace's older system Node installation. Run Expo inside the `iHunt` folder, not the repository root. The tunnel script selects the ngrok transport so an Expo account login is not required.
 
-## Learn more
+## Playable frontend
 
-To learn more about developing your project with Expo, look at the following resources:
+- Home, three illustrated mode cards, invitations, mode instructions, join-code validation, lobby, editable host settings, copy/share, friend search, requests, invitations, demo login/signup/reset, profile editing, and haptics.
+- Album Hunt: native photo library picker. Live Hunt: camera capture only. Photo Battle: camera or library. All modes have an explicit sample-photo fallback.
+- Shared-deadline rounds, hidden submissions, replace-before-submit, upload/wait states, locked entries, reveal, challenge confirmation, deterministic review, life deductions, elimination, round summaries, final standings, and preserved-room rematches.
+- Anonymous Battle entries, disabled self-votes, one confirmed vote, cumulative points, shared winners, and no AI challenge in Battle.
+- Permission errors, full/unavailable/invalid room codes, missed submissions, review failure with preserved lives, simulated disconnect/reconnect, and upload failure/retry.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+Demo room code: **JNGLE6**. Full room: **FULL00**. Expired room: **EXPIRE**. Set the round timer and lives/rounds in the host lobby for a quick test.
 
-## Join the community
+The simulated crew is Zami, Stephen, Edward, and Joshua. Other players submit after 7–13 seconds; after round one, one player deliberately misses each round to exercise elimination. Review outcomes are Stephen accepted, Edward rejected, Joshua unavailable. Gameplay exposes labeled controls to simulate disconnection and a failed next upload. A retry then succeeds.
 
-Join our community of developers creating universal apps.
+## Integration boundaries
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+This is a **local prototype**, not networked multiplayer. Authentication only validates input; it creates no account, stores no password, and sends no reset email. Friends, rooms, invitations, uploads, AI decisions, and opponent votes are simulated. The disconnect control preserves the existing in-memory phase/deadline; app termination and page refresh do not restore a session. Sample photography uses remote Unsplash URLs and needs network access. Native camera and picker behavior must be checked on a physical phone.
+
+`src/game/engine.ts` contains the typed game model and reducer. `src/game/services.ts` defines the service interface and mock implementation; `src/game/context.tsx` runs the simulated opponents and deadlines. `src/ui` contains shared design tokens, typography, controls, vector illustrations, and photo frames. Routes live under `src/app`.
+
+Production still needs authenticated accounts, persisted profiles/friends, real rooms/invites, object storage, realtime synchronization, and server-authoritative deadlines, voting, review decisions, departures, and reconnect recovery. Private AI credentials belong on the server. Push notifications and game sounds are explicitly unavailable in the demo.
+
+## Verify
+
+```sh
+npm run typecheck
+npm run lint
+npm test
+npm run test:visual
+node tests/battle-visual.cjs
+```
+
+Visual checks require the Expo server on port 8081 and Chrome. Set `CHROME_PATH` for another Chrome installation. Browser screenshots are saved in `preview/`. The reducer tests cover submission locking, deadline enforcement, one-time life deductions, delayed review completion, review deduplication, review failure, self-vote prevention, scoring, draws, and rematch reset.

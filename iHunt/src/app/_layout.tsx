@@ -1,18 +1,40 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
-
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
-
-SplashScreen.preventAutoHideAsync();
-
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import { useFonts, Fredoka_600SemiBold } from "@expo-google-fonts/fredoka";
+import {
+  PlusJakartaSans_500Medium,
+  PlusJakartaSans_700Bold,
+} from "@expo-google-fonts/plus-jakarta-sans";
+import { ActivityIndicator, View } from "react-native";
+import { GameProvider } from "../game/context";
+export default function Layout() {
+  const [loaded, error] = useFonts({
+    Fredoka_600SemiBold,
+    PlusJakartaSans_500Medium,
+    PlusJakartaSans_700Bold,
+  });
+  if (!loaded && !error)
+    return (
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "#FFF7E5",
+          justifyContent: "center",
+        }}
+      >
+        <ActivityIndicator color="#123D2A" />
+      </View>
+    );
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
-    </ThemeProvider>
+    <GameProvider>
+      <StatusBar style="dark" />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: "#FFF7E5" },
+          animation: "slide_from_right",
+        }}
+      />
+    </GameProvider>
   );
 }
