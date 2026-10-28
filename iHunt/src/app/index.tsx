@@ -1,98 +1,167 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
+import {
+  Alert,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
-
 export default function HomeScreen() {
+  const comingSoon = (screen: string) => {
+    Alert.alert(screen, 'This screen will be built next.');
+  };
+
   return (
-    <ThemedView style={styles.container}>
+    <View style={styles.screen}>
       <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+        <ScrollView contentContainerStyle={styles.content}>
+          <View style={styles.header}>
+            <View>
+              <Text style={styles.logo}>iHunt</Text>
+              <Text style={styles.greeting}>Ready to hunt?</Text>
+            </View>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
+            <Pressable style={styles.profileButton}>
+              <Text style={styles.profileIcon}>👤</Text>
+            </Pressable>
+          </View>
 
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
+          <View style={styles.heroCard}>
+            <Text style={styles.heroIcon}>🏕️</Text>
+            <Text style={styles.heroTitle}>
+              Explore. Discover. Hunt together.
+            </Text>
+            <Text style={styles.heroText}>
+              Challenge your friends and complete photo missions.
+            </Text>
+          </View>
 
-        {Platform.OS === 'web' && <WebBadge />}
+          <Pressable
+            style={[styles.button, styles.createButton]}
+            onPress={() => comingSoon('Create Game')}
+          >
+            <Text style={styles.buttonText}>＋ Create Game</Text>
+          </Pressable>
+
+          <Pressable
+            style={[styles.button, styles.joinButton]}
+            onPress={() => comingSoon('Join Game')}
+          >
+            <Text style={styles.joinText}>👥 Join Game</Text>
+          </Pressable>
+
+          <View style={styles.recentCard}>
+            <Text style={styles.sectionTitle}>Recent Room</Text>
+            <Text style={styles.roomCode}>AB12CD</Text>
+            <Text style={styles.roomStatus}>2 players · Waiting</Text>
+          </View>
+        </ScrollView>
       </SafeAreaView>
-    </ThemedView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  screen: {
     flex: 1,
-    justifyContent: 'center',
-    flexDirection: 'row',
+    backgroundColor: '#FFF9ED',
   },
   safeArea: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
   },
-  heroSection: {
+  content: {
+    padding: 24,
+    gap: 18,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  logo: {
+    fontSize: 30,
+    fontWeight: '800',
+    color: '#14532D',
+  },
+  greeting: {
+    marginTop: 6,
+    fontSize: 26,
+    fontWeight: '800',
+    color: '#123026',
+  },
+  profileButton: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#DFF5FF',
     alignItems: 'center',
     justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
   },
-  title: {
-    textAlign: 'center',
+  profileIcon: {
+    fontSize: 24,
   },
-  code: {
-    textTransform: 'uppercase',
+  heroCard: {
+    padding: 24,
+    borderRadius: 28,
+    backgroundColor: '#DFF5FF',
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+  heroIcon: {
+    fontSize: 48,
+  },
+  heroTitle: {
+    marginTop: 12,
+    fontSize: 23,
+    fontWeight: '800',
+    color: '#123026',
+  },
+  heroText: {
+    marginTop: 8,
+    fontSize: 16,
+    color: '#355B54',
+    lineHeight: 23,
+  },
+  button: {
+    minHeight: 62,
+    borderRadius: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  createButton: {
+    backgroundColor: '#F5654F',
+  },
+  joinButton: {
+    backgroundColor: '#BDEAF7',
+  },
+  buttonText: {
+    color: 'white',
+    fontSize: 19,
+    fontWeight: '800',
+  },
+  joinText: {
+    color: '#123026',
+    fontSize: 19,
+    fontWeight: '800',
+  },
+  recentCard: {
+    padding: 20,
+    borderRadius: 20,
+    backgroundColor: '#FFFFFF',
+  },
+  sectionTitle: {
+    color: '#64716B',
+    fontSize: 15,
+  },
+  roomCode: {
+    marginTop: 8,
+    color: '#14532D',
+    fontSize: 25,
+    fontWeight: '800',
+  },
+  roomStatus: {
+    marginTop: 4,
+    color: '#64716B',
+    fontSize: 15,
   },
 });
