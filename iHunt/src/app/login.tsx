@@ -1,6 +1,5 @@
 import { router } from 'expo-router';
 import {
-  Alert,
   ImageBackground,
   Pressable,
   StyleSheet,
@@ -10,7 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const background = require('../../assets/images/ihunt-background.png');
+const background = require('../../assets/images/ihunt-home-background.png');
 
 export default function LoginScreen() {
   return (
@@ -35,22 +34,27 @@ export default function LoginScreen() {
         <View style={styles.loginSheet}>
           <View style={styles.inputBox}>
             <Text style={styles.inputIcon}>✉</Text>
+
             <TextInput
               placeholder="Email"
               placeholderTextColor="#7B817D"
               style={styles.input}
               keyboardType="email-address"
+              autoCapitalize="none"
+              autoCorrect={false}
             />
           </View>
 
           <View style={styles.inputBox}>
             <Text style={styles.inputIcon}>🔒</Text>
+
             <TextInput
               placeholder="Password"
               placeholderTextColor="#7B817D"
               style={styles.input}
               secureTextEntry
             />
+
             <Text style={styles.eyeIcon}>◉</Text>
           </View>
 
@@ -67,11 +71,7 @@ export default function LoginScreen() {
             <View style={styles.line} />
           </View>
 
-          <Pressable
-            onPress={() =>
-              Alert.alert('Create Account', 'This feature will be added later.')
-            }
-          >
+          <Pressable onPress={() => router.push('/create-account')}>
             <Text style={styles.createAccount}>Create Account</Text>
           </Pressable>
         </View>
@@ -107,14 +107,14 @@ const styles = StyleSheet.create({
   },
   logo: {
     marginTop: 8,
+    color: '#123026',
     fontSize: 58,
     fontWeight: '900',
-    color: '#123026',
   },
   tagline: {
     marginTop: 2,
-    fontSize: 15,
     color: '#123026',
+    fontSize: 15,
   },
   loginSheet: {
     padding: 22,
@@ -136,17 +136,17 @@ const styles = StyleSheet.create({
   },
   inputIcon: {
     width: 28,
-    fontSize: 21,
     color: '#3E4943',
+    fontSize: 21,
   },
   input: {
     flex: 1,
-    fontSize: 16,
     color: '#123026',
+    fontSize: 16,
   },
   eyeIcon: {
-    fontSize: 18,
     color: '#52605A',
+    fontSize: 18,
   },
   signInButton: {
     height: 62,
@@ -178,9 +178,9 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   createAccount: {
-    textAlign: 'center',
     color: '#176A43',
     fontSize: 17,
     fontWeight: '800',
+    textAlign: 'center',
   },
 });
