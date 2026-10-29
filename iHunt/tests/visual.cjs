@@ -16,6 +16,15 @@ const { chromium } = require("@playwright/test");
     waitUntil: "domcontentloaded",
     timeout: 120000,
   });
+  await page.getByText("WELCOME TO THE HUNT").waitFor({ timeout: 120000 });
+  await page.screenshot({ path: "preview/welcome.png", fullPage: true });
+  await page.getByRole("button", { name: "Sign In" }).click();
+  await page.getByText("Your crew awaits.").waitFor();
+  await page.getByRole("button", { name: "Go back" }).click();
+  await page.getByRole("button", { name: "Create Account" }).click();
+  await page.getByText("Join the adventure.").waitFor();
+  await page.getByRole("button", { name: "Go back" }).click();
+  await page.getByRole("button", { name: "Skip" }).click();
   await page.getByText("PICK YOUR ADVENTURE").waitFor({ timeout: 120000 });
   await page.screenshot({ path: "preview/home.png", fullPage: true });
   await page
@@ -31,7 +40,7 @@ const { chromium } = require("@playwright/test");
     JSON.stringify({
       errors,
       url: page.url(),
-      status: "Home → mode → lobby → game → submit verified",
+      status: "Welcome → sign in/create account/skip → home → game verified",
     }),
   );
   await browser.close();

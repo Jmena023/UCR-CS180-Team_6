@@ -84,6 +84,59 @@ const modes: {
 ];
 const go = (screen: string, params?: Record<string, string>) =>
   router.push({ pathname: "/[page]", params: { page: screen, ...params } });
+const enterHome = () =>
+  router.replace({ pathname: "/[page]", params: { page: "home" } });
+
+export function Welcome() {
+  return (
+    <SafeAreaView style={{ flex: 1, backgroundColor: C.cream }}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={st.welcomeContent}
+      >
+        <View style={{ gap: 12, alignItems: "center" }}>
+          <Label>WELCOME TO THE HUNT</Label>
+          <Wordmark large />
+          <Title>Find it. Snap it. Win it.</Title>
+          <Body center>
+            One prompt for everyone. Your best photo takes the spotlight.
+          </Body>
+        </View>
+        <View style={st.welcomeArt}>
+          <Art mode="album" large />
+          <View style={st.welcomeBadge}>
+            <Icon name="aperture" size={17} />
+            <Label>YOUR NEXT ADVENTURE AWAITS</Label>
+          </View>
+        </View>
+        <View style={{ gap: 14 }}>
+          <Button
+            title="Sign In"
+            icon="arrow-right"
+            onPress={() => go("login")}
+          />
+          <Button
+            title="Create Account"
+            secondary
+            onPress={() => go("signup")}
+          />
+          <Pressable
+            accessibilityRole="button"
+            onPress={enterHome}
+            style={{
+              minHeight: 48,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Text style={st.bold}>Skip</Text>
+          </Pressable>
+          <Body center>Skip opens the demo with sample players.</Body>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
 function Shell({
   children,
   title,
@@ -114,8 +167,7 @@ function Shell({
                   label="Go back"
                   onPress={
                     onBack ||
-                    (() =>
-                      router.canGoBack() ? router.back() : router.replace("/"))
+                    (() => (router.canGoBack() ? router.back() : enterHome()))
                   }
                 />
                 <Text style={{ fontFamily: F.bold, color: C.green }}>
@@ -181,7 +233,7 @@ export function Home() {
       home
       footer={
         <View style={st.nav}>
-          <Pressable style={st.navItem} onPress={() => router.replace("/")}>
+          <Pressable style={st.navItem} onPress={enterHome}>
             <Icon name="compass" />
             <Text style={st.navLabel}>Play</Text>
           </Pressable>
@@ -553,7 +605,7 @@ function Lobby() {
         secondary
         onPress={() => {
           send({ type: "leave-lobby" });
-          router.replace("/");
+          enterHome();
         }}
       />
       <Note>
@@ -680,7 +732,7 @@ function Auth({ signup = false }: { signup?: boolean }) {
       if (signup && !name.trim()) throw Error("Enter your display name.");
       await demoService.authenticate(email, password);
       if (name.trim()) setName(name.trim());
-      router.replace("/");
+      enterHome();
     } catch (e) {
       setError((e as Error).message);
     } finally {
@@ -748,7 +800,7 @@ function Auth({ signup = false }: { signup?: boolean }) {
         title="Explore the demo"
         icon="compass"
         secondary
-        onPress={() => router.replace("/")}
+        onPress={enterHome}
       />
       <Note>
         Demo only. No account is created and no credentials are stored.
@@ -817,9 +869,7 @@ function Profile() {
         title="Log out of demo"
         secondary
         icon="log-out"
-        onPress={() =>
-          router.replace({ pathname: "/[page]", params: { page: "login" } })
-        }
+        onPress={() => router.replace("/")}
       />
     </Shell>
   );
@@ -993,11 +1043,7 @@ function GameScreen() {
             });
           }}
         />
-        <Button
-          title="Back to home"
-          secondary
-          onPress={() => router.replace("/")}
-        />
+        <Button title="Back to home" secondary onPress={enterHome} />
       </Shell>
     );
   return (
@@ -1387,7 +1433,7 @@ function GameScreen() {
                     onPress={() => {
                       send({ type: "forfeit" });
                       setPreview("");
-                      router.replace("/");
+                      enterHome();
                     }}
                   />
                   <Button
@@ -1438,6 +1484,8 @@ function GameRound() {
 }
 export function Screens({ screen }: { screen: string }) {
   switch (screen) {
+    case "home":
+      return <Home />;
     case "mode":
       return <ModeDetails />;
     case "join":
@@ -1465,6 +1513,36 @@ export function Screens({ screen }: { screen: string }) {
   }
 }
 const st = StyleSheet.create({
+  welcomeContent: {
+    flexGrow: 1,
+    width: "100%",
+    maxWidth: 520,
+    alignSelf: "center",
+    paddingHorizontal: 24,
+    paddingTop: 36,
+    paddingBottom: 32,
+    justifyContent: "space-between",
+    gap: 32,
+  },
+  welcomeArt: {
+    minHeight: 188,
+    backgroundColor: "#EAF0DD",
+    borderRadius: 24,
+    borderWidth: 2,
+    borderColor: C.green,
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 16,
+    gap: 8,
+  },
+  welcomeBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    padding: 10,
+    backgroundColor: C.yellow,
+    borderRadius: 12,
+  },
   container: { flex: 1, width: "100%", maxWidth: 520, alignSelf: "center" },
   header: {
     paddingHorizontal: 24,

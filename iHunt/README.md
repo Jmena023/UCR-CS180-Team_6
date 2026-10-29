@@ -1,6 +1,6 @@
 ﻿# iHunt
 
-An Expo SDK 58 / React Native / TypeScript frontend with an original jungle arcade design. Open the app straight into the playable demo; no credentials are required.
+An Expo SDK 58 / React Native / TypeScript frontend with an original jungle arcade design. The entry screen offers Sign In, Create Account, and Skip. Skip opens the playable demo without credentials.
 
 ## Run on your phone
 

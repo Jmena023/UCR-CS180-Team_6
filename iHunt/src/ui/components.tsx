@@ -155,22 +155,13 @@ export function Field({
     </View>
   );
 }
-export const Wordmark = () => (
-  <View style={s.row}>
-    <View style={s.logo}>
-      <Icon name="aperture" size={25} color={C.cream} />
-    </View>
-    <Text
-      style={{
-        fontFamily: F.title,
-        color: C.green,
-        fontSize: 34,
-        letterSpacing: -1.5,
-      }}
-    >
-      iHunt<Text style={{ color: C.orange }}>.</Text>
-    </Text>
-  </View>
+export const Wordmark = ({ large = false }: { large?: boolean }) => (
+  <Image
+    source={require("../../assets/Green cursive ihunt logo with camera dot.png")}
+    accessibilityLabel="iHunt"
+    resizeMode="contain"
+    style={{ width: large ? 310 : 142, height: large ? 112 : 51 }}
+  />
 );
 export function Avatar({
   name,
