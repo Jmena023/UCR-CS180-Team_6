@@ -90,8 +90,9 @@ const enterHome = () =>
   router.replace({ pathname: "/[page]", params: { page: "home" } });
 
 export function Welcome() {
-  const { height } = useWindowDimensions();
-  const compact = height < 740;
+  const { height, width } = useWindowDimensions();
+  const logoWidth = Math.min(360, width - 48);
+  const taglineSize = Math.min(30, (width - 48) * 0.1);
   return (
     <SafeAreaView style={st.fixedScreen}>
       <Image
@@ -101,21 +102,35 @@ export function Welcome() {
         accessible={false}
         pointerEvents="none"
       />
-      <View style={st.welcomeContent}>
-        <View style={{ gap: compact ? 6 : 12, alignItems: "center" }}>
+      <View
+        style={[
+          st.welcomeContent,
+          {
+            paddingTop: Math.min(64, Math.max(24, height * 0.08)),
+            paddingBottom: Math.min(48, Math.max(24, height * 0.05)),
+          },
+        ]}
+      >
+        <View style={{ gap: 10, alignItems: "center" }}>
           <Label>WELCOME TO THE HUNT</Label>
-          <Wordmark large={!compact} />
-          <Title>Find it. Snap it. Win it.</Title>
+          <Wordmark width={logoWidth} />
+          <Text
+            accessibilityRole="header"
+            numberOfLines={1}
+            adjustsFontSizeToFit
+            style={{
+              width: "100%",
+              textAlign: "center",
+              fontFamily: F.title,
+              fontSize: taglineSize,
+              lineHeight: taglineSize * 1.2,
+              color: C.green,
+            }}
+          >
+            Find it. Snap it. Win it.
+          </Text>
         </View>
-        <View style={st.welcomeArt}>
-          {height >= 620 && (
-            <Art mode="album" large={!compact} compact={compact} />
-          )}
-          <View style={st.welcomeBadge}>
-            <Icon name="aperture" size={17} />
-            <Label>YOUR NEXT ADVENTURE AWAITS</Label>
-          </View>
-        </View>
+
         <View style={{ gap: 14 }}>
           <Button
             title="Sign In"

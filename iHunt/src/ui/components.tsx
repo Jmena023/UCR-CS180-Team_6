@@ -155,12 +155,21 @@ export function Field({
     </View>
   );
 }
-export const Wordmark = ({ large = false }: { large?: boolean }) => (
+export const Wordmark = ({
+  large = false,
+  width,
+}: {
+  large?: boolean;
+  width?: number;
+}) => (
   <Image
     source={require("../../assets/ihunt Logo.png")}
     accessibilityLabel="iHunt"
     resizeMode="contain"
-    style={{ width: large ? 310 : 142, height: large ? 112 : 51 }}
+    style={{
+      width: width ?? (large ? 310 : 142),
+      height: width ? width * 0.356 : large ? 112 : 51,
+    }}
   />
 );
 export function Avatar({
