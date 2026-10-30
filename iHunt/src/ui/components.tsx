@@ -157,7 +157,7 @@ export function Field({
 }
 export const Wordmark = ({ large = false }: { large?: boolean }) => (
   <Image
-    source={require("../../assets/Green cursive ihunt logo with camera dot.png")}
+    source={require("../../assets/ihunt Logo.png")}
     accessibilityLabel="iHunt"
     resizeMode="contain"
     style={{ width: large ? 310 : 142, height: large ? 112 : 51 }}

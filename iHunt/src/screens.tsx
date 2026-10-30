@@ -98,9 +98,6 @@ export function Welcome() {
           <Label>WELCOME TO THE HUNT</Label>
           <Wordmark large />
           <Title>Find it. Snap it. Win it.</Title>
-          <Body center>
-            One prompt for everyone. Your best photo takes the spotlight.
-          </Body>
         </View>
         <View style={st.welcomeArt}>
           <Art mode="album" large />
@@ -131,7 +128,6 @@ export function Welcome() {
           >
             <Text style={st.bold}>Skip</Text>
           </Pressable>
-          <Body center>Skip opens the demo with sample players.</Body>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -141,13 +137,11 @@ function Shell({
   children,
   title,
   home = false,
-  footer,
   onBack,
 }: {
   children: React.ReactNode;
   title?: string;
   home?: boolean;
-  footer?: React.ReactNode;
   onBack?: () => void;
 }) {
   return (
@@ -198,7 +192,6 @@ function Shell({
           >
             {children}
           </ScrollView>
-          {footer}
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -229,31 +222,8 @@ export function Home() {
   const { name, create } = useGame();
   const [invite, setInvite] = useState(true);
   return (
-    <Shell
-      home
-      footer={
-        <View style={st.nav}>
-          <Pressable style={st.navItem} onPress={enterHome}>
-            <Icon name="compass" />
-            <Text style={st.navLabel}>Play</Text>
-          </Pressable>
-          <Pressable style={st.navItem} onPress={() => go("friends")}>
-            <Icon name="users" color={C.muted} />
-            <Text style={st.navLabel}>Friends</Text>
-          </Pressable>
-          <Pressable style={st.navItem} onPress={() => go("profile")}>
-            <Icon name="user" color={C.muted} />
-            <Text style={st.navLabel}>You</Text>
-          </Pressable>
-        </View>
-      }
-    >
+    <Shell home>
       <View style={{ gap: 7, paddingTop: 10 }}>
-        <Label>GOOD TIMES START HERE</Label>
-        <Title>
-          Hey {name},<Text style={{ color: "#378543" }}> let’s hunt.</Text>
-        </Title>
-        <Body>A little adventure. A lot of camera roll chaos.</Body>
       </View>
       {invite && (
         <Card style={{ backgroundColor: "#EAF0DD", padding: 16 }}>
@@ -336,11 +306,6 @@ export function Home() {
         icon="hash"
         onPress={() => go("join")}
       />
-      <View style={[s.row, { justifyContent: "center" }]}>
-        <Icon name="sun" size={16} />
-        <Note>Good friends. Great finds.</Note>
-      </View>
-      <Note>DEMO EXPEDITION · Friends and game services are simulated.</Note>
     </Shell>
   );
 }
@@ -743,8 +708,6 @@ function Auth({ signup = false }: { signup?: boolean }) {
     <Shell title={signup ? "Create account" : "Welcome back"}>
       <Wordmark />
       <Art mode="album" large />
-      <Title>{signup ? "Join the adventure." : "Your crew awaits."}</Title>
-      <Body>Find the unexpected. Make a memory.</Body>
       {signup && (
         <Field
           label="DISPLAY NAME"
@@ -1567,16 +1530,6 @@ const st = StyleSheet.create({
   play: { flexDirection: "row", alignItems: "center", gap: 9, marginTop: 5 },
   bold: { fontFamily: F.bold, color: C.green, fontSize: 13 },
   small: { fontFamily: F.body, fontSize: 11, color: C.muted },
-  nav: {
-    borderTopWidth: 1,
-    borderColor: C.line,
-    backgroundColor: C.cream,
-    padding: 12,
-    flexDirection: "row",
-    justifyContent: "space-around",
-  },
-  navItem: { minWidth: 64, minHeight: 44, gap: 4, alignItems: "center" },
-  navLabel: { fontFamily: F.bold, fontSize: 10, color: C.green },
   artHero: {
     borderRadius: 24,
     padding: 24,
