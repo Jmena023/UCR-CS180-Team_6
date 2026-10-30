@@ -218,6 +218,11 @@ function Note({
     </Text>
   );
 }
+const sampleInvite: { playerCount: number; status: "lobby" | "playing" } = {
+  playerCount: 3,
+  status: "lobby",
+};
+
 export function Home() {
   const { name, create } = useGame();
   const [invite, setInvite] = useState(true);
@@ -230,8 +235,11 @@ export function Home() {
           <View style={s.row}>
             <Avatar name="Joshua" color="#C5D6B1" size={38} />
             <View style={{ flex: 1, gap: 4 }}>
-              <Text style={st.bold}>Your crew is calling</Text>
-              <Note>Joshua invited you to Album Hunt.</Note>
+              <Text style={st.bold}>Joshua invited you to Album Hunt</Text>
+              <Text style={st.small}>
+                {sampleInvite.playerCount} players ·{" "}
+                {sampleInvite.status === "lobby" ? "In lobby" : "Playing"}
+              </Text>
             </View>
             <Icon name="send" size={19} />
           </View>
@@ -256,10 +264,7 @@ export function Home() {
           </View>
         </Card>
       )}
-      <View style={s.spread}>
-        <Label>PICK YOUR ADVENTURE</Label>
-        <Text style={st.small}>2–4 players</Text>
-      </View>
+
       <View style={{ gap: 16 }}>
         {modes.map((m) => (
           <Pressable
