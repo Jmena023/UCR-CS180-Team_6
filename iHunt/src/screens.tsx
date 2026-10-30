@@ -48,7 +48,7 @@ const modes: {
   {
     id: "album",
     title: "Album Hunt",
-    desc: "Your camera roll. A wild challenge.",
+    desc: "Search your camera roll.",
     color: "#FFE1BD",
     tag: "A CAMERA ROLL ADVENTURE",
     steps: [
@@ -72,7 +72,7 @@ const modes: {
   {
     id: "battle",
     title: "Photo Battle",
-    desc: "One prompt. Let the best photo win.",
+    desc: "Let the best photo win.",
     color: "#FFF0B2",
     tag: "A LITTLE FRIENDLY COMPETITION",
     steps: [
@@ -228,20 +228,24 @@ export function Home() {
   const [invite, setInvite] = useState(true);
   return (
     <Shell home>
-      <View style={{ gap: 7, paddingTop: 10 }}>
-      </View>
       {invite && (
-        <Card style={{ backgroundColor: "#EAF0DD", padding: 16 }}>
+        <Card style={{ backgroundColor: "#EAF0DD", padding: 12, gap: 10 }}>
           <View style={s.row}>
             <Avatar name="Joshua" color="#C5D6B1" size={38} />
             <View style={{ flex: 1, gap: 4 }}>
-              <Text style={st.bold}>Joshua invited you to Album Hunt</Text>
+              <Text
+                style={st.bold}
+                numberOfLines={1}
+                adjustsFontSizeToFit
+                minimumFontScale={0.8}
+              >
+                Joshua invited you to Album Hunt
+              </Text>
               <Text style={st.small}>
                 {sampleInvite.playerCount} players ·{" "}
                 {sampleInvite.status === "lobby" ? "In lobby" : "Playing"}
               </Text>
             </View>
-            <Icon name="send" size={19} />
           </View>
           <View style={s.row}>
             <View style={{ flex: 1 }}>
