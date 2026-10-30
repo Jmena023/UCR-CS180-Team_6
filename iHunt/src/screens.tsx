@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
   KeyboardAvoidingView,
+  Image,
   BackHandler,
   Modal,
   Platform,
@@ -10,6 +11,7 @@ import {
   StyleSheet,
   Switch,
   Text,
+  useWindowDimensions,
   View,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -88,19 +90,27 @@ const enterHome = () =>
   router.replace({ pathname: "/[page]", params: { page: "home" } });
 
 export function Welcome() {
+  const { height } = useWindowDimensions();
+  const compact = height < 740;
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: C.cream }}>
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={st.welcomeContent}
-      >
-        <View style={{ gap: 12, alignItems: "center" }}>
+    <SafeAreaView style={st.fixedScreen}>
+      <Image
+        source={require("../assets/background.png")}
+        style={st.screenBackground}
+        resizeMode="stretch"
+        accessible={false}
+        pointerEvents="none"
+      />
+      <View style={st.welcomeContent}>
+        <View style={{ gap: compact ? 6 : 12, alignItems: "center" }}>
           <Label>WELCOME TO THE HUNT</Label>
-          <Wordmark large />
+          <Wordmark large={!compact} />
           <Title>Find it. Snap it. Win it.</Title>
         </View>
         <View style={st.welcomeArt}>
-          <Art mode="album" large />
+          {height >= 620 && (
+            <Art mode="album" large={!compact} compact={compact} />
+          )}
           <View style={st.welcomeBadge}>
             <Icon name="aperture" size={17} />
             <Label>YOUR NEXT ADVENTURE AWAITS</Label>
@@ -124,12 +134,14 @@ export function Welcome() {
               minHeight: 48,
               alignItems: "center",
               justifyContent: "center",
+              backgroundColor: C.cream,
+              borderRadius: 14,
             }}
           >
             <Text style={st.bold}>Skip</Text>
           </Pressable>
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -145,7 +157,18 @@ function Shell({
   onBack?: () => void;
 }) {
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: C.cream }}>
+    <SafeAreaView
+      style={home ? st.fixedScreen : { flex: 1, backgroundColor: C.cream }}
+    >
+      {home && (
+        <Image
+          source={require("../assets/background.png")}
+          style={st.screenBackground}
+          resizeMode="stretch"
+          accessible={false}
+          pointerEvents="none"
+        />
+      )}
       <KeyboardAvoidingView
         behavior={Platform.OS === "ios" ? "padding" : undefined}
         style={{ flex: 1 }}
@@ -185,13 +208,17 @@ function Shell({
               </Pressable>
             </View>
           </View>
-          <ScrollView
-            contentContainerStyle={st.content}
-            showsVerticalScrollIndicator={false}
-            keyboardShouldPersistTaps="handled"
-          >
-            {children}
-          </ScrollView>
+          {home ? (
+            <View style={st.homeContent}>{children}</View>
+          ) : (
+            <ScrollView
+              contentContainerStyle={st.content}
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
+            >
+              {children}
+            </ScrollView>
+          )}
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -269,7 +296,7 @@ export function Home() {
         </Card>
       )}
 
-      <View style={{ gap: 16 }}>
+      <View style={{ flex: 1, gap: 10 }}>
         {modes.map((m) => (
           <Pressable
             key={m.id}
@@ -284,9 +311,9 @@ export function Home() {
               },
             ]}
           >
-            <View style={{ flex: 1, gap: 8 }}>
+            <View style={{ flex: 1, gap: 4 }}>
               <Text
-                style={{ fontFamily: F.title, fontSize: 28, color: C.green }}
+                style={{ fontFamily: F.title, fontSize: 24, color: C.green }}
               >
                 {m.title}
               </Text>
@@ -305,7 +332,7 @@ export function Home() {
                 <Icon name="arrow-right" size={17} />
               </View>
             </View>
-            <Art mode={m.id} />
+            <Art mode={m.id} compact />
           </Pressable>
         ))}
       </View>
@@ -1485,19 +1512,34 @@ export function Screens({ screen }: { screen: string }) {
   }
 }
 const st = StyleSheet.create({
+  screenBackground: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+  },
+  fixedScreen: {
+    flex: 1,
+    minHeight: 0,
+    overflow: "hidden",
+    backgroundColor: C.cream,
+  },
   welcomeContent: {
-    flexGrow: 1,
+    flex: 1,
+    minHeight: 0,
     width: "100%",
     maxWidth: 520,
     alignSelf: "center",
     paddingHorizontal: 24,
-    paddingTop: 36,
-    paddingBottom: 32,
+    paddingVertical: 16,
     justifyContent: "space-between",
-    gap: 32,
+    gap: 12,
   },
   welcomeArt: {
-    minHeight: 188,
+    flex: 1,
+    minHeight: 0,
+    maxHeight: 260,
     backgroundColor: "#EAF0DD",
     borderRadius: 24,
     borderWidth: 2,
@@ -1515,7 +1557,13 @@ const st = StyleSheet.create({
     backgroundColor: C.yellow,
     borderRadius: 12,
   },
-  container: { flex: 1, width: "100%", maxWidth: 520, alignSelf: "center" },
+  container: {
+    flex: 1,
+    minHeight: 0,
+    width: "100%",
+    maxWidth: 520,
+    alignSelf: "center",
+  },
   header: {
     paddingHorizontal: 24,
     paddingVertical: 14,
@@ -1524,11 +1572,20 @@ const st = StyleSheet.create({
     alignItems: "center",
   },
   content: { padding: 24, paddingTop: 8, gap: 24, paddingBottom: 36 },
+  homeContent: {
+    flex: 1,
+    minHeight: 0,
+    paddingHorizontal: 24,
+    paddingTop: 8,
+    paddingBottom: 16,
+    gap: 12,
+  },
   mode: {
     paddingLeft: 20,
     paddingRight: 8,
-    paddingVertical: 13,
-    minHeight: 154,
+    paddingVertical: 6,
+    flex: 1,
+    minHeight: 0,
     flexDirection: "row",
     alignItems: "center",
     borderWidth: 2,

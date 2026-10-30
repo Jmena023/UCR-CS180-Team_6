@@ -197,14 +197,16 @@ export function Avatar({
 export function Art({
   mode,
   large = false,
+  compact = false,
 }: {
   mode: "album" | "live" | "battle";
   large?: boolean;
+  compact?: boolean;
 }) {
   return (
     <Svg
-      width={large ? 220 : 126}
-      height={large ? 170 : 125}
+      width={large ? 220 : compact ? 92 : 126}
+      height={large ? 170 : compact ? 85 : 125}
       viewBox="0 0 160 140"
     >
       <Ellipse cx="85" cy="120" rx="57" ry="9" fill={C.green} opacity=".12" />
